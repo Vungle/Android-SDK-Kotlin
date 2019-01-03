@@ -1,0 +1,84 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.getkeepsafe.dexcount'
+
+buildscript {
+    repositories {
+        mavenCentral() // or jcenter()
+    }
+    dependencies {
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
+    }
+}
+
+android {
+    signingConfigs {
+        release {
+            keyAlias 'MyAndroidKey'
+            keyPassword 'myKeyPassword'
+            storeFile file('keystores/android.jks')
+            storePassword 'myStorePassword'
+        }
+    }
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.publisher.vungle.sample"
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    ext.google_play_services_version = '16.0.0'
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+
+    // Vungle SDK
+    implementation 'com.github.vungle:vungle-android-sdk:6.3.24'
+
+    // Recommended Google Play Services
+    implementation "com.google.android.gms:play-services-basement:$google_play_services_version"
+
+    // Optional Google Play Services
+    implementation "com.google.android.gms:play-services-ads-identifier:$google_play_services_version"
+    implementation "com.google.android.gms:play-services-location:$google_play_services_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+
+//    // Manual JAR Integration
+//    // Vungle SDK
+//    implementation files('libs/vungle-android-sdk-6.3.24.jar')
+//
+//    // Required Third-party Dependencies
+//    implementation files('libs/converter-gson-2.2.0.jar')
+//    implementation files('libs/fetch-1.1.5.jar')
+//    implementation files('libs/gson-2.7.jar')
+//    implementation files('libs/logging-interceptor-3.7.0.jar')
+//    implementation files('libs/okhttp-3.7.0.jar')
+//    implementation files('libs/okio-1.12.0.jar')
+//    implementation files('libs/retrofit-2.2.0.jar')
+//    implementation files('libs/VNG-moat-mobile-app-kit-2.2.0.jar')
+//
+//    // Support library
+//    implementation 'com.android.support:support-v4:27.1.1'
+}
